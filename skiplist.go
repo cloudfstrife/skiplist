@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-// ---------------------------------------------------------
-
-// ---------------------------------------------------------
-
 // Node skiplist node
 type Node interface {
 	Next() Node
@@ -101,12 +97,12 @@ func (s *SkipList) Insert(v Node) {
 		var stack = NewStack()
 		inode := s.Header
 		for inode != nil {
-			stack.Push(&SLNStackNode{value: inode})
+			stack.Push(&SkipListStackNode{value: inode})
 			inode = inode.Down()
 		}
 		var private Node
 		for !stack.Empty() {
-			n, _ := stack.Pop().(*SLNStackNode)
+			n, _ := stack.Pop().(*SkipListStackNode)
 			newnode := v.CopyValue()
 			newnode.SetNext(n.value)
 			newnode.SetDown(private)
@@ -132,12 +128,12 @@ func (s *SkipList) Insert(v Node) {
 	inode := s.Header
 	for inode != nil {
 		if inode.Next() == nil {
-			stack.Push(&SLNStackNode{value: inode})
+			stack.Push(&SkipListStackNode{value: inode})
 			inode = inode.Down()
 			continue
 		}
 		if inode.Next().Key() > k {
-			stack.Push(&SLNStackNode{value: inode})
+			stack.Push(&SkipListStackNode{value: inode})
 			inode = inode.Down()
 			continue
 		}
@@ -148,7 +144,7 @@ func (s *SkipList) Insert(v Node) {
 	var level int8 = 1
 
 	for !stack.Empty() {
-		pre, _ := stack.Pop().(*SLNStackNode)
+		pre, _ := stack.Pop().(*SkipListStackNode)
 
 		newNode := v.CopyValue()
 		newNode.SetDown(downNode)
@@ -173,10 +169,11 @@ func (s *SkipList) Insert(v Node) {
 			nhead := s.Header.CopyValue()
 			nhead.SetDown(s.Header)
 			s.Header = nhead
-			stack.Push(&SLNStackNode{value: nhead})
+			stack.Push(&SkipListStackNode{value: nhead})
 		}
 	}
 }
+
 func (s SkipList) String() string {
 	buf := new(bytes.Buffer)
 	n := s.Header
@@ -239,3 +236,19 @@ func (s SkipList) String() string {
 	}
 	return buf.String()
 }
+
+// -----------------------------------------------------------------------------
+
+type SkipListStackNode struct {
+	value Node
+	next  StackNode
+}
+
+func (s *SkipListStackNode) Next() StackNode {
+	return s.next
+}
+func (s *SkipListStackNode) SetNext(v StackNode) {
+	s.next = v
+}
+
+// -----------------------------------------------------------------------------

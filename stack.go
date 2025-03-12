@@ -38,19 +38,3 @@ func (s *Stack) Empty() bool {
 func (s *Stack) Size() int {
 	return s.size
 }
-
-// ---------------------------------------------
-
-type SLNStackNode struct {
-	value Node
-	next  StackNode
-}
-
-func (s *SLNStackNode) Next() StackNode {
-	return s.next
-}
-func (s *SLNStackNode) SetNext(v StackNode) {
-	s.next = v
-}
-
-// ---------------------------------------------
